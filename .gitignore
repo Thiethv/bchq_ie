@@ -138,8 +138,10 @@ venv.bak/
 settings/config.py
 ie_venv/
 file_excel/
-database/
 data_supabase/
+pass.py
+
+
 *.xlsx
 *.xls
 *test*

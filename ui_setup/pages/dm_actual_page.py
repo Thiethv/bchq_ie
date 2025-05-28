@@ -1,5 +1,4 @@
 import streamlit as st
-import pandas as pd
 from ui_setup.data_dmtt.fabric_trans import FabricTrans
 from ui_setup.data_dmtt.jo_process_wip import JoProcessWip
 from ui_setup.data_dmtt.submat_trans import SubmatTrans

@@ -1,4 +1,3 @@
-import os
 import pandas as pd
 from database.connect_supabase import SupabaseFunctions
 

@@ -115,3 +115,14 @@ class SupabaseFunctions:
         except Exception as e:
             print(traceback.format_exc())
             return False
+        
+    # FUNCTION FOR LOGIN/ REGISTER
+    def get_user_by_username(self, username):
+        return supabase.table("users").select("*").eq("username", username).execute()
+    
+    def create_user(self, username, password, role="user"):
+        return supabase.table("users").insert({
+            "username": username,
+            "password": password,
+            "role": role
+        }).execute()

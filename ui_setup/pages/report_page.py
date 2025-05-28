@@ -1,6 +1,5 @@
 import streamlit as st
 import pandas as pd
-from ui_setup.utils.excel_loader import load_excel
 from io import BytesIO
 from database.connect_supabase import SupabaseFunctions
 

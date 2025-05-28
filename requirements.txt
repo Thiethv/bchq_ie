@@ -4,3 +4,10 @@ openpyxl
 streamlit-option-menu
 
 extra-streamlit-components
+bcrypt
+beautifulsoup4
+pyodbc
+selenium
+SQLAlchemy
+supabase
+urllib3

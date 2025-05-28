@@ -1,5 +1,5 @@
 import streamlit as st
-import pandas as pd
+
 from ui_setup.utils.excel_loader import load_excel
 from ui_setup.data_dmkt.cutting_forecast import CuttingForecast
 from ui_setup.data_dmkt.data_master_list import MasterList
