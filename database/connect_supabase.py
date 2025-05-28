@@ -2,7 +2,7 @@ import traceback
 import pandas as pd
 from settings.config import SUPABASE_API, SUPABASE_URL
 from supabase import Client, create_client
-
+print(SUPABASE_URL, SUPABASE_API)
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_API)
 
 class SupabaseFunctions:
