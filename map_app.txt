@@ -1,0 +1,11 @@
+ie_app/
+├── main.py                      # File chạy chính, điều hướng theo sidebar
+├── pages/
+│   ├── dm_technical.py          # Trang "DM Technical"
+│   ├── dm_actual.py             # Trang "DM Actual"
+│   ├── report.py                # Trang "Report"
+│   └── function.py              # Trang "Function"
+├── utils/
+│   └── excel_loader.py          # Hàm đọc file Excel
+├── data/                        # Dự phòng nơi lưu file dữ liệu
+└── requirements.txt             # Thư viện cần cài
