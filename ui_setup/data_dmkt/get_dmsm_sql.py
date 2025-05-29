@@ -34,13 +34,12 @@ class DemandSM:
             AND LEFT([JO NO], 8) IN ({jo_nos_str})
         """
 
-        df_month = self.queries.getData(query)
-
-        df_month["GO"] = "S" + df_month['JO NO'].str[:8]
+        df_month = self.queries.getData(query)        
 
         if df_month.empty:
             st.warning(f"❌ Không tìm thấy dữ liệu trong tháng {from_month}/{year}, chọn lại tháng khác!")
             return
+        df_month["GO"] = "S" + df_month['JO NO'].str[:8]
 
         df_all = df_month
         cols = [0, 7, 8, 9, 10, 11, 15, 17, 19, 20, 21]
@@ -115,6 +114,7 @@ class DemandSM:
             """
 
         df = self.queries.getData(query)
+
         if df.empty:
             st.warning(f"❌ Không tìm thấy dữ liệu từ năm {year}, chọn lại năm khác!")
             return None

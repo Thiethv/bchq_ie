@@ -39,8 +39,8 @@ class ConnectSQLServer:
             else:
                 print("Kết nối SQL không tồn tại.")
 
-                return None
+                return pd.DataFrame()
         except Exception as e:
             traceback.print_exc()
             print(f"Lỗi khi lấy dữ liệu {e}")
-            return None
+            return pd.DataFrame()
