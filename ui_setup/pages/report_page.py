@@ -54,7 +54,9 @@ def run():
                 data = query_data(selected_data, sub_selected_data)
                 if not data.empty:
 
-                    st.session_state['report_data'] = data  # Lưu vào session_state    
+                    st.session_state['report_data'] = data  # Lưu vào session_state
+                else:
+                    st.session_state['report_data'] = pd.DataFrame()    
 
         with c2:
             st.write("")
@@ -75,7 +77,7 @@ def run():
         st.dataframe(data.reset_index(drop=True), use_container_width=True)
 
     else:
-        st.warning("Chưa truy vấn dữ liệu!")
+        st.warning("Chưa truy vấn dữ liệu hoặc dữ liệu không có!")
 
 def query_data(selected_data, sub_selected_data):
     sc_nos_str = ''
@@ -134,7 +136,8 @@ def query_data(selected_data, sub_selected_data):
                 else SupabaseFunctions().get_data("dm_actual", "*")
             
             data = process_data_compare(data_techncial, data_actual)
-    
+    if data.empty:
+        return pd.DataFrame()
     data = data.drop(columns=["id"])
     data = data.sort_values(by=[data.columns[0]])
 

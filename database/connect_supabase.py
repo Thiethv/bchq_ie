@@ -18,6 +18,9 @@ class SupabaseFunctions:
             if res:
                 data = res.data
                 return pd.DataFrame(data)
+            
+            else:
+                return pd.DataFrame()
         
         except Exception as e:
             print(e)

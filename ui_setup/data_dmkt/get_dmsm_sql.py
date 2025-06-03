@@ -60,38 +60,19 @@ class DemandSM:
         ]
 
         # --- Đẩy lên supbase ---
-        data_supa = self.supa_func.get_data("submat_demand", "*")
-        if not data_supa.empty:
-            required_qty_map = data_supa.set_index("JO_NO")["Required_Qty"].to_dict()
-
-            df_all["Required_Qty_in_data"] = df_all["JO_NO"].map(required_qty_map)
-
-            df_check = df_all[(df_all["JO_NO"].isin(data_supa["JO_NO"])) & (df_all["Required_Qty"] != df_all["Required_Qty_in_data"])] # Lọc các GO_No có Order_QTY khác Order_QTY_in_data
-            df_remaining = df_all[~df_all["JO_NO"].isin(data_supa["JO_NO"])]
-            
-            if not df_check.empty:
-                jo_nos = df_check["JO_NO"].tolist()
-                condition = f' "JO_NO" = {jo_nos[0]} ' if len(jo_nos) == 1 else f'"JO_NO" IN {tuple(jo_nos)}'
-                self.supa_func.delete_data("submat_demand", condition)
-
-                df_remaining = pd.concat([df_remaining, df_check], ignore_index=True)
-
-            if not df_remaining.empty:
-                df_remaining = df_remaining.drop(columns=["Required_Qty_in_data"])
-
-        else:
-            df_remaining = df_all
-        if df_remaining.empty:
+        if df_all.empty:
             st.warning(f"✅ Dữ liệu đã có trong Database!")
             return
+        
+        df_remaining = df_all
         df_remaining = df_remaining.dropna()
         if "Create_Date" in df_remaining.columns:
             df_remaining["Create_Date"] = df_remaining["Create_Date"].dt.strftime("%Y-%m-%d %H:%M:%S")
-        
         data_json = df_remaining.to_dict('records')
 
-        if self.supa_func.insert_data("submat_demand", data_json) == True:
-            st.success(f"✅ Đã lý dữ liệu submat demand so với list GO: {df_remaining['GO'].nunique()} / {data_go['SC_NO'].nunique()}")
+        if self.supa_func.delete_data("submat_demand", f' LEFT("JO_NO", 8) IN ({jo_nos_str}) ') == True:
+            if self.supa_func.insert_data("submat_demand", data_json) == True:
+                st.success(f"✅ Đã lý dữ liệu submat demand so với list GO: {df_remaining['GO'].nunique()} / {data_go['SC_NO'].nunique()}")
     
     def get_go_quantity(self, year):
         '''
@@ -118,31 +99,8 @@ class DemandSM:
         if df.empty:
             st.warning(f"❌ Không tìm thấy dữ liệu từ năm {year}, chọn lại năm khác!")
             return None
-        data = self.supa_func.get_data("go_quantity", "*")
-
-        if not data.empty:
-            # Tạo dict ánh xạ GO_No -> Order_QTY từ data
-            order_qty_map = data.set_index("GO_No")["Order_QTY"].to_dict()
-
-            # Ánh xạ Order_QTY từ data sang df
-            df["Order_QTY_in_data"] = df["GO No"].map(order_qty_map)
-
-            df_check = df[(df["GO No"].isin(data["GO_No"])) & (df["Order QTY"] != df["Order_QTY_in_data"])] # Lọc các GO_No có Order_QTY khác Order_QTY_in_data
-
-            df_remaining = df[~df["GO No"].isin(data["GO_No"])] # Giữ lại nhưng GO_No không có trong dữ liệu supabase
-            
-            if not df_check.empty:
-                go = df_check["GO No"].tolist()
-                condition = f' "GO_No" = {go[0]} ' if len(go) == 1 else f'"GO_No" IN {tuple(go)}'
-                self.supa_func.delete_data("go_quantity", condition)
-
-                df_remaining = pd.concat([df_remaining, df_check], ignore_index=True)
-
-            if not df_remaining.empty:
-                df_remaining = df_remaining.drop(columns=["Order_QTY_in_data"])
-
-        else:
-            df_remaining = df
+        
+        df_remaining = df
 
         if df_remaining.empty:
             st.warning(f"✅ Dữ liệu đã có trong Database")
@@ -153,8 +111,8 @@ class DemandSM:
 
         df_remaining['Year'] = df_remaining['Year'].astype(int).astype(str)
         df_remaining['Order_QTY'] = df_remaining['Order_QTY'].astype(int)
-        
-        if self.supa_func.insert_data("go_quantity", df_remaining.to_dict('records')):
-            st.success(f"✅ Đã lấy dữ liệu được so với list GO: {df_remaining['GO_No'].nunique()} / {data_go['SC_NO'].nunique()}")
+        if self.supa_func.delete_data("go_quantity", f' "GO_No" IN ({jo_nos_str}) '):
+            if self.supa_func.insert_data("go_quantity", df_remaining.to_dict('records')):
+                st.success(f"✅ Đã lấy dữ liệu được so với list GO: {df_remaining['GO_No'].nunique()} / {data_go['SC_NO'].nunique()}")
 
         
